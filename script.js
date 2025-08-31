@@ -1,4 +1,4 @@
-let a=0,b=0,x=0,operator,ans=0;
+let a=0,b=0,x=0,operator,ans=0,justCalculated=false;
 function add(a,b){
   return a+b;
 }
@@ -29,15 +29,23 @@ const digits = document.querySelectorAll('.digit');
 for(const digit of digits){                       
   digit.addEventListener("click",()=>{              
     const screen = document.querySelector('#screen');
+    if(justCalculated) {
+      screen.textContent = "";
+      justCalculated = false;  
+    }
     screen.textContent += digit.textContent;
     x=screen.textContent;
   })                                                  
-}                                                   
+}                                                  
 const symbols= document.querySelectorAll('.symbol');
 for (const symbol of symbols){
   symbol.addEventListener("click",()=>{
     operator=symbol.textContent;
-    a=Number(x);
+    if(justCalculated==false){
+      a=Number(x);
+    }else {
+      a=ans;justCalculated=false;
+    }
     x=0;
     const screen = document.querySelector('#screen');
     screen.textContent = "";
@@ -48,11 +56,20 @@ clr.addEventListener('click',function(){
   const screen = document.querySelector('#screen');
   screen.textContent = "";
   a=0;x=0;b=0;operator=0;
+  justCalculated=false;
 });
 const eql=document.getElementById("eql");
 eql.addEventListener('click',function(){
   b=Number(x);
+  if(b === 0 && operator === '/') {
+    const screen = document.querySelector('#screen');
+    screen.textContent = "Error";
+    return;screen.textContent = "";
+  a=0;x=0;b=0;operator=0;
+  justCalculated=false;
+  }else{
   ans=operate(a,b,operator);
   const screen = document.querySelector('#screen');
-  screen.textContent = ans;
+  screen.textContent = ans;justCalculated=true;
+  }
 });
